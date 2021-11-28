@@ -13,7 +13,7 @@
           steps {
                 script {
          
-                  def dockerImage = docker.build("${env.BUILD_DISPLAY_NAME}:${env.BUILD_ID}")
+                  def dockerImage = docker.build("time-service:${env.BUILD_ID}")
                         
                   dockerImage.push()
 
