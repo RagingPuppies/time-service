@@ -2,8 +2,12 @@
       agent any
       stages{
         stage('Initialize'){
-        def dockerHome = tool 'docker-builder'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
+          steps {
+                script{
+                  def dockerHome = tool 'docker-builder'
+                  env.PATH = "${dockerHome}/bin:${env.PATH}"
+                }
+          }
         }
         stage('Build and Push Docker Image...') {
           steps {
