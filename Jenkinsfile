@@ -55,7 +55,7 @@
           container('helm') {
               sh "helm --help"
     
-            kubeconfig(credentialsId: 'ebcefe62-8a14-4845-ba7b-ff3efb43cb9e', serverUrl: 'https://kubernetes.default') {
+            kubeconfig(credentialsId: 'kubeconfig1', serverUrl: 'https://kubernetes.default') {
                 sh 'kubectl get pods'
             }
 
