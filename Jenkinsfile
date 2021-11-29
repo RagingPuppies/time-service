@@ -1,111 +1,41 @@
-pipeline {
-
-      agent any
-
-      environment {
-        registryCredential = credentials('dockerhub')
-        containerName = 'timeservice'
-        repoName = 'timeservice'
-        accountName = 'ragingpuppies'
-      }
-
-    stages{
-
-        stage('Initialize'){
-
-          steps {
-
-                script{
-
-                  def dockerHome = tool 'docker-builder'
-                  env.PATH = "${dockerHome}/bin:${env.PATH}"
-
-                }
-
-          }
-
-        }
-
-        stage('Login'){
-
-          steps {
-
+  podTemplate(containers: [
+    containerTemplate(name: 'helm', image: 'alpine/helm', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'docker', image: 'alpinelinux/docker-cli', command: 'sleep', args: '99d')
+  ])
+  
+  {
+    node(POD_LABEL) {
+      def containerName = 'timeservice'
+        stage('login') {
+            container('docker') {
                 script {
-
-                  docker.withServer('tcp://host.docker.internal:2375') {
-
-                    sh "docker login -u $registryCredential_USR -p $registryCredential_PSW"
-
-                  }
-
-                } 
-          }
-
+                    docker.withServer('tcp://host.docker.internal:2375') {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+                            credentialsId: 'dockerhub',
+                            usernameVariable: 'registryCredential_USR', 
+                            passwordVariable: 'registryCredential_PSW']]) {
+                            sh "docker login -u $registryCredential_USR -p $registryCredential_PSW"
+                        }
+                    }
+                }
+            } 
         }
 
         stage('Build') {
-
-          steps {
-
+            container('docker') {
                 script {
+                    docker.withServer('tcp://host.docker.internal:2375') {
+                            sh "docker build -t $containerName:${env.BUILD_ID} ."
+                    }
+                }
+            } 
+        }
 
-                  docker.withServer('tcp://host.docker.internal:2375') {
-
-                    sh "docker build -t $containerName:${env.BUILD_ID} ."
-
-                  }
-
-                } 
+        stage('Build Docker image') {
+          container('helm') {
+            sh "helm --help"
           }
-
-        }
-
-        stage('Push') {
-
-          steps {
-                script {
-                  docker.withServer('tcp://host.docker.internal:2375') {
-
-                    sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:${env.BUILD_ID}"
-                    sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:latest"
-
-                    sh "docker push $accountName/$repoName"
-
-                    sh "docker rmi -f $accountName/$containerName:${env.BUILD_ID}"
-                    sh "docker rmi -f $accountName/$containerName:latest"
-                    
-                  }
-                }
-            }
-        }
-
-        stage('deploy') {
-            agent {
-                docker {
-                    image 'alpine/helm'
-                    reuseNode true
-                }
-            }
-          steps {
-                script {
-                  docker.withServer('tcp://host.docker.internal:2375') {
-
-                    sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:${env.BUILD_ID}"
-                    sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:latest"
-
-                    sh "docker push $accountName/$repoName"
-
-                    sh "docker rmi -f $accountName/$containerName:${env.BUILD_ID}"
-                    sh "docker rmi -f $accountName/$containerName:latest"
-                    
-                  }
-                }
-            }
         }
 
     }
-
 }
-    
-
-
