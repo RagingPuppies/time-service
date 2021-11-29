@@ -1,4 +1,4 @@
-    pipeline {
+pipeline {
 
       agent any
 
@@ -77,6 +77,7 @@
                   }
                 }
             }
+        }
 stage('bla'){
       node('k8s-slave') {
 
@@ -90,5 +91,5 @@ stage('bla'){
       }
         }
         }
-      }
-    }
+}
+    
