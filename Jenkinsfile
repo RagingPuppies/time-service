@@ -1,11 +1,11 @@
   podTemplate(containers: [
-    containerTemplate(name: 'helm', image: 'alpine/helm', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'helm', image: 'dtzar/helm-kubectl', command: 'sleep', args: '99d'),
     containerTemplate(name: 'docker', image: 'alpinelinux/docker-cli', command: 'sleep', args: '99d')
   ])
   
   {
     node(POD_LABEL) {
-      
+
       def containerName = 'timeservice'
       def accountName = 'ragingpuppies'
       def repoName = 'timeservice'
@@ -54,6 +54,7 @@
         stage('Deploy') {
           container('helm') {
             sh "helm --help"
+            sh 'kubectl get nodes'
           }
         }
 
