@@ -5,7 +5,11 @@
   
   {
     node(POD_LABEL) {
+      
       def containerName = 'timeservice'
+      def accountName = 'ragingpuppies'
+      def repoName = 'timeservice'
+
         stage('login') {
             container('docker') {
                 script {
