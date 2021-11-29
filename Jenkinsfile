@@ -12,10 +12,11 @@
         stage('Build and Push Docker Image...') {
           steps {
                 script {
-         
-                  def dockerImage = docker.build("time-service:${env.BUILD_ID}")
-                        
-                  dockerImage.push()
+
+                  docker.withServer('tcp://host.docker.internal:2375') {
+                    def dockerImage = docker.build("time-service:${env.BUILD_ID}")
+                    dockerImage.push()
+                  }
 
                   sh 'docker rmi -f ${env.BUILD_DISPLAY_NAME}:${env.BUILD_ID}'
 
