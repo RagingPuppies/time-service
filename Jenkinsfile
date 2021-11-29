@@ -84,6 +84,7 @@
           stage('k8s-slave'){
               container('helm') {
                   script{
+                    sh 'kubectl get nodes'
                     sh 'helm --h'
                   }
               }
