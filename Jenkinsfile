@@ -9,7 +9,6 @@
       def containerName = 'timeservice'
       def accountName = 'ragingpuppies'
       def repoName = 'timeservice'
-      def git = 'https://github.com/RagingPuppies/time-service.git'
 
         stage('login') {
             container('docker') {
@@ -27,7 +26,7 @@
         }
 
         stage('Build') {
-            git $git
+            git 'https://github.com/RagingPuppies/time-service.git'
             container('docker') {
                 script {
                     docker.withServer('tcp://host.docker.internal:2375') {
@@ -38,7 +37,7 @@
         }
 
         stage('Push') {
-            git $git
+            git 'https://github.com/RagingPuppies/time-service.git'
             container('docker') {
                 script {
                     docker.withServer('tcp://host.docker.internal:2375') {
