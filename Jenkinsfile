@@ -9,7 +9,7 @@ pipeline {
         accountName = 'ragingpuppies'
       }
 
-      stages{
+    stages{
 
         stage('Initialize'){
 
@@ -78,7 +78,8 @@ pipeline {
                 }
             }
         }
-stage('bla'){
+    }
+
       node('k8s-slave') {
 
               container('helm') {
@@ -87,9 +88,7 @@ stage('bla'){
                     sh 'helm --h'
                   }
               }
-          
       }
-        }
-        }
+      
 }
     
