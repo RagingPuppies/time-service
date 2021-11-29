@@ -50,7 +50,7 @@
 
                   docker.withServer('tcp://host.docker.internal:2375') {
 
-                    sh "docker build -t ragingpuppies/$containerName:${env.BUILD_ID} ."
+                    sh "docker build -t $containerName:${env.BUILD_ID} ."
 
                   }
 
