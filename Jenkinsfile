@@ -3,7 +3,9 @@
       agent any
 
       environment {
-        registryCredential = 'dockerhub'
+        registryCredential = credentials('dockerhub')
+        containerName = 'timeservice'
+        repoName = 'timeservice'
       }
 
       stages{
@@ -23,21 +25,48 @@
 
         }
 
-        stage('Build and Push Docker Image...') {
+        stage('Login'){
+
+          steps {
+
+                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+
+          }
+
+        }
+
+        stage('Build') {
 
           steps {
 
                 script {
 
                   docker.withServer('tcp://host.docker.internal:2375') {
-                    def dockerImage = docker.build("time-service:${env.BUILD_ID}")
-                    docker.withRegistry("", registryCredential) {
-                      dockerImage.push()
-                    }
+
+                    sh "docker build -t ragingpuppies/$containerName:${env.BUILD_ID} ."
+
+                  }
+
+                } 
+          }
+
+        }
+
+        stage('Push') {
+
+          steps {
+
+                script {
+
+                  docker.withServer('tcp://host.docker.internal:2375') {
+
+                    sh "docker tag $containerName:${env.BUILD_ID} ragingpuppies/$repoName:${env.BUILD_ID}"
+
+                    sh "docker push ragingpuppies/$repoName $containerName:${env.BUILD_ID}"
                     
                   }
 
-                  sh 'docker rmi -f ${env.BUILD_DISPLAY_NAME}:${env.BUILD_ID}'
+                  sh "docker rmi -f $containerName:${env.BUILD_ID}"
 
                 } 
             } 
