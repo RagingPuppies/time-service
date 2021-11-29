@@ -73,8 +73,8 @@
 
                     sh "docker push $accountName/$repoName"
 
-                    sh "docker rmi -f $containerName:${env.BUILD_ID}"
-                    sh "docker rmi -f $containerName:latest"
+                    sh "docker rmi -f $accountName/$containerName:${env.BUILD_ID}"
+                    sh "docker rmi -f $accountName/$containerName:latest"
                     
                   }
 
