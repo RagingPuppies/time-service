@@ -74,7 +74,7 @@ gsrHWg0PFwy3EBj4OGD6kkqJKa1efhCRhy74w387g9k3a5GvrjEQuUt4wJbpauED
 Dqy8WfO6izm8kRrOsmVHcZcqlQ+dIedXRO9P/Pmoe7l8KizWw1ZNwnfHHz9JSBj6
 +O8yEvIBIwErcw==
 -----END CERTIFICATE-----''', credentialsId: '735cd2d7-18ab-4ba8-b584-e9c87a51fee9', serverUrl: 'https://kubernetes.default') {
-    sh 'kubectl get nodes'
+    sh 'kubectl get pods'
 }
     
 
