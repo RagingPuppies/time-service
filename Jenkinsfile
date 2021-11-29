@@ -3,7 +3,7 @@
       agent any
 
       environment {
-        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+        registryCredential = 'dockerhub'
       }
 
       stages{
@@ -31,7 +31,7 @@
 
                   docker.withServer('tcp://host.docker.internal:2375') {
                     def dockerImage = docker.build("time-service:${env.BUILD_ID}")
-                    docker.withRegistry("", DOCKERHUB_CREDENTIALS) {
+                    docker.withRegistry("", registryCredential) {
                       dockerImage.push()
                     }
                     
