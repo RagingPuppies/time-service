@@ -57,7 +57,7 @@
                 git 'https://github.com/RagingPuppies/helm_charts.git'
                 withKubeConfig([credentialsId: 'kubeconfig-file']) {
                   sh "ls"                
-                  sh "helm install revision-${env.BUILD_ID} ./helm_charts --set Name=$containerName --set ExternalPort=30111 --set DeploymentTag=${env.BUILD_ID}"
+                  sh "helm install revision-${env.BUILD_ID} . --set Name=$containerName --set ExternalPort=30111 --set DeploymentTag=${env.BUILD_ID}"
                 }
             }
         }
