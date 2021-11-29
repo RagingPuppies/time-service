@@ -77,7 +77,7 @@
                   }
                 }
             }
-stage('bla'){}
+stage('bla'){
       node('k8s-slave') {
           stage('test helm'){
               container('helm') {
