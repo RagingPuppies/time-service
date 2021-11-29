@@ -29,8 +29,15 @@
 
           steps {
 
-                sh "docker login -u $registryCredential_USR -p $registryCredential_PSW"
+                script {
 
+                  docker.withServer('tcp://host.docker.internal:2375') {
+
+                    sh "docker login -u $registryCredential_USR -p $registryCredential_PSW"
+
+                  }
+
+                } 
           }
 
         }
