@@ -79,14 +79,14 @@
             }
 stage('bla'){
       node('k8s-slave') {
-          stage('test helm'){
+
               container('helm') {
                   script{
                     sh 'kubectl get nodes'
                     sh 'helm --h'
                   }
               }
-          }
+          
       }
         }
         }
