@@ -29,7 +29,7 @@
 
           steps {
 
-                sh "echo $registryCredential_PSW | docker login -u $registryCredential_USR --password-stdin"
+                sh "docker login -u $registryCredential_USR -p $registryCredential_PSW"
 
           }
 
