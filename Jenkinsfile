@@ -64,7 +64,7 @@
 
         stage('Test') {
             container('helm') {
-                  sh "curl $containerName:5000"                
+                  sh "curl $containerName-service-${env.BUILD_ID}:5000"                
             }
         }
 
