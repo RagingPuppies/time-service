@@ -70,10 +70,16 @@
                     sh "docker tag $containerName:${env.BUILD_ID} ragingpuppies/$repoName:${env.BUILD_ID}"
 
                     sh "docker push ragingpuppies/$repoName"
+
+                    sh "docker tag $containerName ragingpuppies/$repoName"
+
+                    sh "docker push ragingpuppies/$repoName"
+
+                    sh "docker rmi -f $containerName:${env.BUILD_ID}"
                     
                   }
 
-                  sh "docker rmi -f $containerName:${env.BUILD_ID}"
+                  
 
                 } 
             } 
