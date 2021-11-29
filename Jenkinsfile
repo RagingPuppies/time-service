@@ -1,16 +1,3 @@
-def installHelm(){
-  sh "curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -"
-  sh "sudo apt-get install apt-transport-https --yes"
-  sh 'echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list'
-  sh 'sudo apt-get update'
-  sh 'sudo apt-get install helm'
-}
-
-def installKubectl(){
-  sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-  sh 'sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl'
-}
-
     pipeline {
 
       agent any
@@ -93,14 +80,14 @@ def installKubectl(){
 
         }
 
-        stage('Deploy') {
-
-          steps {
-               container('helm') {
-                    sh "helm version"
-                }
-
-            } 
-        }
+      node('test-pod') {
+          stage('k8s-slave'){
+              container('helm') {
+                  script{
+                    sh 'helm --h'
+                  }
+              }
+          }
+      }
       }
     }
