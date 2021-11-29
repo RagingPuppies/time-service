@@ -69,7 +69,7 @@
 
                     sh "docker tag $containerName:${env.BUILD_ID} ragingpuppies/$repoName:${env.BUILD_ID}"
 
-                    sh "docker push ragingpuppies/$repoName $containerName:${env.BUILD_ID}"
+                    sh "docker push ragingpuppies/$repoName"
                     
                   }
 
