@@ -77,11 +77,9 @@
                   }
                 }
             }
-
-        }
-
-      node('test-pod') {
-          stage('k8s-slave'){
+stage('bla'){}
+      node('k8s-slave') {
+          stage('test helm'){
               container('helm') {
                   script{
                     sh 'kubectl get nodes'
@@ -90,5 +88,7 @@
               }
           }
       }
+        }
+        }
       }
     }
