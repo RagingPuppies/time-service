@@ -55,7 +55,7 @@
           container('helm') {
               sh "helm --help"
     
-              withKubeConfig([credentialsId: 'kubeconfig'
+              withKubeConfig([credentialsId: 'kubeconfig-file'
                               ]) {
                 sh 'kubectl get pods'
               }
