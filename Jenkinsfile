@@ -78,17 +78,34 @@ pipeline {
                 }
             }
         }
+
+        stage('deploy') {
+            agent {
+                docker {
+                    image 'alpine/helm'
+                    reuseNode true
+                }
+            }
+          steps {
+                script {
+                  docker.withServer('tcp://host.docker.internal:2375') {
+
+                    sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:${env.BUILD_ID}"
+                    sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:latest"
+
+                    sh "docker push $accountName/$repoName"
+
+                    sh "docker rmi -f $accountName/$containerName:${env.BUILD_ID}"
+                    sh "docker rmi -f $accountName/$containerName:latest"
+                    
+                  }
+                }
+            }
+        }
+
     }
 
-      node('k8s-slave') {
-
-              container('helm') {
-                  script{
-                    sh 'kubectl get nodes'
-                    sh 'helm --h'
-                  }
-              }
-      }
-      
 }
     
+
+
