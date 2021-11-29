@@ -22,6 +22,7 @@
         }
 
         stage('Build') {
+            git 'https://github.com/RagingPuppies/time-service.git'
             container('docker') {
                 script {
                     docker.withServer('tcp://host.docker.internal:2375') {
@@ -31,7 +32,22 @@
             } 
         }
 
-        stage('Build Docker image') {
+        stage('Push') {
+            git 'https://github.com/RagingPuppies/time-service.git'
+            container('docker') {
+                script {
+                    docker.withServer('tcp://host.docker.internal:2375') {
+                        sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:${env.BUILD_ID}"
+                        sh "docker tag $containerName:${env.BUILD_ID} $accountName/$repoName:latest"
+                        sh "docker push $accountName/$repoName"
+                        sh "docker rmi -f $accountName/$containerName:${env.BUILD_ID}"
+                        sh "docker rmi -f $accountName/$containerName:latest"
+                    }
+                }
+            } 
+        }
+
+        stage('Deploy') {
           container('helm') {
             sh "helm --help"
           }
